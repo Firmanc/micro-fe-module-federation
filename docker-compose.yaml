@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  mothership:
+    build: ./app-01
+    ports:
+      - 3001:3001
+  onboarding:
+    build: ./app-02
+    ports:
+      - 3002:3002
+  platform:
+    build: ./app-03
+    ports:
+      - 3003:3003
+  login:
+    build: ./app-04
+    ports:
+      - 3004:3004
+  platform2:
+    build: ./app-05
+    ports:
+      - 3005:3005

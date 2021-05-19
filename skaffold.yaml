@@ -1,0 +1,35 @@
+---
+apiVersion: skaffold/v2beta14
+kind: Config
+metadata:
+  name: micro-frontend
+deploy:
+  kubectl:
+    manifests:
+    - manifests/micro-frontend-namespace.yaml
+    - manifests/apps/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: app-01
+      context: app-01
+      docker:
+        dockerfile: ./Dockerfile
+    - image: app-02
+      context: app-02
+      docker:
+        dockerfile: ./Dockerfile
+    - image: app-03
+      context: app-03
+      docker:
+        dockerfile: ./Dockerfile
+    - image: app-04
+      context: app-04
+      docker:
+        dockerfile: ./Dockerfile
+    - image: app-05
+      context: app-05
+      docker:
+        dockerfile: ./Dockerfile
+
