@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: enterprise-service
+  namespace: micro-frontend
+  labels:
+    app: enterprise
+spec:
+  type: NodePort
+  ports:
+  - name: web-port
+    port: 3003
+    nodePort: 30030
+  selector:
+    app: enterprise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enterprise
+  namespace: micro-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enterprise
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: enterprise
+        version: v1
+    spec:
+      containers:
+      - image: enterprise
+        imagePullPolicy: IfNotPresent
+        name: enterprise
+        ports:
+        - containerPort: 3003

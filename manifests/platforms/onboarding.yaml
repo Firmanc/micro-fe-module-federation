@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onboarding-service
+  namespace: micro-frontend
+  labels:
+    app: onboarding
+spec:
+  type: NodePort
+  ports:
+  - name: web-port
+    port: 3002
+    nodePort: 30020
+  selector:
+    app: onboarding
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onboarding
+  namespace: micro-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onboarding
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: onboarding
+        version: v1
+    spec:
+      containers:
+      - image: onboarding
+        imagePullPolicy: IfNotPresent
+        name: onboarding
+        ports:
+        - containerPort: 3002

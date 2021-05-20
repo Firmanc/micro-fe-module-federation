@@ -7,29 +7,25 @@ deploy:
   kubectl:
     manifests:
     - manifests/micro-frontend-namespace.yaml
-    - manifests/apps/*
+    - manifests/platforms/*
 build:
   local:
     push: false
   artifacts:
-    - image: app-01
-      context: app-01
+    - image: mothership
+      context: platforms/mothership
       docker:
         dockerfile: ./Dockerfile
-    - image: app-02
-      context: app-02
+    - image: onboarding
+      context: platforms/onboarding
       docker:
         dockerfile: ./Dockerfile
-    - image: app-03
-      context: app-03
+    - image: enterprise
+      context: platforms/enterprise
       docker:
         dockerfile: ./Dockerfile
-    - image: app-04
-      context: app-04
-      docker:
-        dockerfile: ./Dockerfile
-    - image: app-05
-      context: app-05
+    - image: auth
+      context: platforms/auth
       docker:
         dockerfile: ./Dockerfile
 
