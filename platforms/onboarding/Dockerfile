@@ -14,6 +14,6 @@ WORKDIR /app
 
 COPY package.json ./
 RUN yarn install --silent
-COPY --from=build /app/dist ./dist
+COPY --from=build /app/public ./public
 
 ENTRYPOINT ["yarn", "serve"]

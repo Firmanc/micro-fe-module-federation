@@ -1,26 +1,28 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ModuleFederationPlugin = require("webpack").container
   .ModuleFederationPlugin;
-const deps = require("./package.json").dependencies;
+const path = require("path");
+
+const mode = process.env.NODE_ENV || "development";
+const prod = mode === "production";
+
 module.exports = {
-  entry: "./src/index",
-  cache: false,
-
-  mode: "development",
-  devtool: "source-map",
-
-  optimization: {
-    minimize: false,
+  entry: {
+    bundle: ["./src/main.js"],
   },
-
+  resolve: {
+    alias: {
+      svelte: path.resolve("node_modules", "svelte"),
+    },
+    extensions: [".mjs", ".js", ".svelte"],
+    mainFields: ["svelte", "browser", "module", "main"],
+  },
   output: {
+    path: __dirname + "/public",
+    filename: "[name].js",
+    chunkFilename: "[name].[id].js",
     publicPath: "auto",
   },
-
-  resolve: {
-    extensions: [".jsx", ".js", ".json", ".mjs"],
-  },
-
   module: {
     rules: [
       {
@@ -31,47 +33,42 @@ module.exports = {
         },
       },
       {
-        test: /\.jsx?$/,
-        loader: require.resolve("babel-loader"),
-        exclude: /node_modules/,
-        options: {
-          presets: [require.resolve("@babel/preset-react")],
+        test: /\.svelte$/,
+        use: {
+          loader: "svelte-loader",
+          options: {
+            emitCss: true,
+            hotReload: true,
+          },
         },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          /**
+           * MiniCssExtractPlugin doesn't support HMR.
+           * For developing, use 'style-loader' instead.
+           * */
+          prod ? MiniCssExtractPlugin.loader : "style-loader",
+          "css-loader",
+        ],
       },
     ],
   },
-
+  mode,
   plugins: [
     new ModuleFederationPlugin({
-      name: "app_02",
+      name: "onboarding",
       filename: "remoteEntry.js",
-      remotes: {
-        app_01: "app_01@http://localhost:30010/remoteEntry.js",
-        app_03: "app_03@http://localhost:30030/remoteEntry.js",
-      },
       exposes: {
-        "./Dialog": "./src/Dialog",
-        "./Tabs": "./src/Tabs",
+        "./App": "./src/main.js",
+        "./loadApp": "./src/loadApp.js",
       },
-      shared: {
-        ...deps,
-        "@material-ui/core": {
-          singleton: true,
-        },
-        "react-router-dom": {
-          singleton: true,
-        },
-        "react-dom": {
-          singleton: true,
-        },
-        react: {
-          singleton: true,
-        },
-      },
+      shared: [],
     }),
-    new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      chunks: ["main"],
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
     }),
   ],
+  devtool: prod ? false : "source-map",
 };

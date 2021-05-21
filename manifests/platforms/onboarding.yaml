@@ -10,8 +10,8 @@ spec:
   type: NodePort
   ports:
   - name: web-port
-    port: 3002
-    nodePort: 30020
+    port: 3004
+    nodePort: 30040
   selector:
     app: onboarding
 ---
@@ -37,4 +37,4 @@ spec:
         imagePullPolicy: IfNotPresent
         name: onboarding
         ports:
-        - containerPort: 3002
+        - containerPort: 3004

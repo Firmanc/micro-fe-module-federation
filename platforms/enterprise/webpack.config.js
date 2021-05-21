@@ -43,13 +43,12 @@ module.exports = {
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "app_03",
+      name: "enterprise",
       filename: "remoteEntry.js",
-      remotes: {
-        app_01: "app_01@http://app-01-service:30010/remoteEntry.js",
-      },
+      remotes: {},
       exposes: {
-        "./Button": "./src/Button",
+        "./JobCorridor": "./src/JobCorridor",
+        "./JobProfiles": "./src/JobProfiles",
       },
       shared: {
         "react-dom": {

@@ -16,16 +16,16 @@ build:
       context: platforms/mothership
       docker:
         dockerfile: ./Dockerfile
-    - image: onboarding
-      context: platforms/onboarding
+    - image: auth-app
+      context: platforms/auth-app
       docker:
         dockerfile: ./Dockerfile
     - image: enterprise
       context: platforms/enterprise
       docker:
         dockerfile: ./Dockerfile
-    - image: auth
-      context: platforms/auth
+    - image: onboarding
+      context: platforms/onboarding
       docker:
         dockerfile: ./Dockerfile
 

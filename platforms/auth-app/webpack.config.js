@@ -2,8 +2,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack").container
   .ModuleFederationPlugin;
 const deps = require("./package.json").dependencies;
-const path = require("path");
-
 module.exports = {
   entry: "./src/index",
   cache: false,
@@ -16,8 +14,7 @@ module.exports = {
   },
 
   output: {
-    path: path.resolve(__dirname, 'dist/client'),
-    publicPath: '/',
+    publicPath: "auto",
   },
 
   resolve: {
@@ -41,23 +38,20 @@ module.exports = {
           presets: [require.resolve("@babel/preset-react")],
         },
       },
-      {
-        test: /\.md$/,
-        loader: "raw-loader",
-      },
     ],
   },
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "mothership",
+      name: "authApp",
       filename: "remoteEntry.js",
       remotes: {
-        authApp: "authApp@http://localhost:30020/remoteEntry.js",
+        mothership: "mothership@http://localhost:30010/remoteEntry.js",
         enterprise: "enterprise@http://localhost:30030/remoteEntry.js",
-        onboarding: "onboarding@http://localhost:30040/remoteEntry.js",
       },
-      exposes: {},
+      exposes: {
+        "./Login": "./src/Login",
+      },
       shared: {
         ...deps,
         "react-router-dom": {
@@ -73,6 +67,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
+      chunks: ["main"],
     }),
   ],
 };
